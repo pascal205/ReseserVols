@@ -1,0 +1,81 @@
+body {
+    background: #f5f8fc;
+    color: #0f3b4c;
+}
+
+.hero {
+    background: linear-gradient(135deg, #0f3b4c 0%, #1b5e7a 55%, #2cbff8 100%);
+    color: white;
+}
+
+.breadcrumb-item a {
+    color: rgba(255,255,255,.8);
+}
+
+.breadcrumb-item a:hover {
+    color: white;
+}
+
+.breadcrumb-item.active {
+    color: rgba(255,255,255,.95);
+}
+
+.hero-card,
+.summary-card,
+.form-card {
+    background: #fff;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 35px rgba(15, 59, 76, 0.10);
+}
+
+.text-accent {
+    color: #2cbff8;
+}
+
+.btn-primary-custom {
+    background: linear-gradient(135deg, #2cbff8, #1b8ec5);
+    border: none;
+    color: white;
+}
+
+.btn-primary-custom:hover {
+    background: linear-gradient(135deg, #1ba6d8, #166e9b);
+    color: white;
+}
+
+.btn-outline-custom {
+    border-color: #2cbff8;
+    color: #2cbff8;
+}
+
+.btn-outline-custom:hover {
+    background: #2cbff8;
+    color: white;
+}
+
+.info-pill {
+    background: #eef8ff;
+    color: #0f3b4c;
+    border: 1px solid #d9efff;
+}
+
+.route-line {
+    position: relative;
+    height: 2px;
+    background: linear-gradient(90deg, #2cbff8, #0f3b4c);
+}
+
+.route-line::after {
+    content: '✈';
+    position: absolute;
+    right: -8px;
+    top: -10px;
+    color: #2cbff8;
+    font-size: 1rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #2cbff8;
+    box-shadow: 0 0 0 0.2rem rgba(44, 191, 248, 0.25);
+}
