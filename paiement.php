@@ -4,10 +4,13 @@ require_once("form/database.php");
 
 
 $pagestyle = false;
+$infolder = false;
+
 $idvol = (int)($_GET['id'] ?? $_POST['id_vols'] ?? 0);
+$iduser = (int)($_POST['id_user']);
 $nbPersonnes = max(1, min(5, (int)($_GET['nb'] ?? $_POST['nb_personnes'] ?? 1)));
 
-if (!$idvol) {
+if (!$idvol && !$iduser) {
     redirect("planning.php");
 }
 
@@ -80,6 +83,7 @@ unset($_SESSION['paiement_erreur']);
 
                     <form action="traitement_paiement.php" method="POST" id="formPaiement" novalidate>
                         <input type="hidden" name="id_vols" value="<?= $idvol ?>">
+                        <input type="hidden" name="id_user" value="<?= $iduser ?>">
                         <input type="hidden" name="nb_personnes" value="<?= $nbPersonnes ?>">
                         <input type="hidden" name="montant_total" value="<?= htmlspecialchars($montantTotal) ?>">
 

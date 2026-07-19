@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $idvol        = (int)($_POST['id_vols'] ?? 0);
+$iduser        = (int)($_POST['id_user'] ?? 0);
 $nbPersonnes  = max(1, min(5, (int)($_POST['nb_personnes'] ?? 1)));
 $montantTotal = (float)($_POST['montant_total'] ?? 0);
 
@@ -62,7 +63,7 @@ $cvv       = trim($_POST['cvv'] ?? '');
 
 $erreurs = [];
 
-if (!$idvol) {
+if (!$idvol && !$iduser) {
     $erreurs[] = "Vol introuvable.";
 }
 if ($nom === '' || $prenom === '') {
@@ -145,9 +146,9 @@ try {
     $pdo->beginTransaction();
 
     $stmt = $pdo->prepare("INSERT INTO reservations
-        (id_vols, nom, prenom, email, nb_personnes, montant_total, reference, statut, date_reservation)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'payee', NOW())");
-    $stmt->execute([$idvol, $nom, $prenom, $email, $nbPersonnes, $montantTotal, $reference]);
+        (id_vols, id_user, nom, prenom, email, nb_personnes, montant_total, reference, statut, date_reservation)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'payee', NOW())");
+    $stmt->execute([$idvol, $iduser, $nom, $prenom, $email, $nbPersonnes, $montantTotal, $reference]);
 
     $stmt = $pdo->prepare("UPDATE vols SET places_dispo = places_dispo - ? WHERE id_vols = ?");
     $stmt->execute([$nbPersonnes, $idvol]);
@@ -171,6 +172,7 @@ $_SESSION['confirmation'] = [
     'nb_personnes'  => $nbPersonnes,
     'montant_total' => $montantTotal,
     'id_vols'       => $idvol,
+    'id_user'       => $iduser,
 ];
 
 redirect("confirmation.php");

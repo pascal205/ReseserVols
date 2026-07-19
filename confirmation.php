@@ -10,6 +10,7 @@ if (!function_exists('redirect')) {
 }
 
 $pagestyle = false;
+$infolder = false;
 
 $confirmation = $_SESSION['confirmation'] ?? null;
 unset($_SESSION['confirmation']);

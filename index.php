@@ -2,8 +2,6 @@
 require_once("form/config.php");
 require_once("form/database.php");
 
-
-
 if (isset($_POST['create-itinerary'])) {
     $_SESSION['villeDp'] = $_POST['villeDp'];
     $_SESSION['villeAv'] = $_POST['villeAv'];
@@ -20,6 +18,7 @@ $volDispos = $pdo->query("SELECT v.id_vols AS id_vol, ville_depart, ville_arrive
                 WHERE date_depart >= CURDATE()
                 ORDER BY date_depart ASC, heure_depart ASC LIMIT 4")->fetchAll();
 $pagestyle = true;
+$infolder = false;
 
 ?>
 <!DOCTYPE html>

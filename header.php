@@ -1,6 +1,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="bootstrap-5.3.8-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="<?= $infolder ? '../bootstrap-5.3.8-dist/css/bootstrap.css' : 'bootstrap-5.3.8-dist/css/bootstrap.css'?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <?php if($pagestyle==true){?><link rel="stylesheet" href="pro.css"><?php }else{}?>
@@ -74,7 +74,7 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <!-- Logo -->
-                <a class="navbar-brand fs-3 logo" href="index.php"><h2>ReservVols ✈️</h2></a>
+                <a class="navbar-brand fs-3 logo" href="<?= SITE_URL ?>/index.php"><h2>ReservVols ✈️</h2></a>
 
                 <!-- Hamburger menu button (mobile) -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
@@ -99,7 +99,7 @@
                                 <span class="fw-bold d-none d-lg-inline">
                                     <?php echo htmlspecialchars($_SESSION['prenom'] . ' ' . $_SESSION['nom']); ?>
                                 </span>
-                                <a href="dashboard.php?id=<?= $_SESSION['user_id'] ?>" class="btn btn-outline-primary rounded-pill">Mon profil</a>
+                                <a href="<?= SITE_URL ?>/profil/dashboard.php?id=<?= $_SESSION['user_id'] ?>" class="btn btn-outline-primary rounded-pill">Mon profil</a>
                             </div>
                         <?php } else { ?>
                             <div class="d-flex gap-2">
@@ -113,5 +113,5 @@
         </nav>
     </div>
 </header>
-<script src="bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?= $infolder ? '../bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js' : 'bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js'?>"></script>
     <!-- <script src="bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script> -->

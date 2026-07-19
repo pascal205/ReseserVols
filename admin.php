@@ -42,6 +42,7 @@ if (isset($_POST['insert'])) {
     }
     $comps = $pdo->query("SELECT id_compagnie AS id, nom, code_compagnie FROM compagnie")->fetchAll();
 $pagestyle = false;
+$infolder = false;
 ?>
 <?php include 'header.php'; ?>
 

@@ -4,6 +4,8 @@ require_once("form/database.php");
 
 
 $pagestyle = false;
+$infolder = false;
+
 $idvol = (int)($_GET['id'] ?? 0);
 
 if (!$idvol) {

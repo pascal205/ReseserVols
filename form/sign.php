@@ -1,6 +1,6 @@
 <?php
 require_once('config.php');
-require_once("form/database.php");
+require_once("database.php");
 
 
 $erreur = [];

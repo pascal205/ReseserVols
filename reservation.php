@@ -3,6 +3,8 @@ require_once('form/config.php');
 require_once("form/database.php");
 
 $pagestyle = false;
+$infolder = false;
+
 $idvol = (int)($_GET['id'] ?? 0);
 
 if (!$idvol) {
@@ -21,6 +23,7 @@ if (!$vol) {
 }
 
 $hasProfile = !empty($_SESSION['prenom']) || !empty($_SESSION['nom']) || !empty($_SESSION['email']) || !empty($_SESSION['telephone']);
+$iduser = $_SESSION['user_id'];
 $prenom = $_SESSION['prenom'] ?? '';
 $nom = $_SESSION['nom'] ?? '';
 $email = $_SESSION['email'] ?? '';
@@ -58,6 +61,7 @@ $telephone = $_SESSION['telephone'] ?? '';
                     <h3 class="fw-bold mb-4">Informations du voyageur</h3>
                     <form action="paiement.php" method="post">
                         <input type="hidden" name="id_vols" value="<?= (int)$idvol ?>">
+                        <input type="hidden" name="id_user" value="<?= (int)$iduser ?>">
                         <input type="hidden" name="nb_personnes" value="1">
                         <div class="row g-3">
                             <div class="col-md-6">

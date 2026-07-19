@@ -56,6 +56,7 @@ if (isset($_POST['search'])) {
     $villeA = $_POST['villeAv'];
     $date = $_POST['date'];
 
+if ($date) {
     $stmt = $pdo->prepare("SELECT v.id_vols AS id_vols, ville_depart, ville_arrivee, v.places_dispo, v.prix, date_depart, heure_depart, heure_arrivee, c.nom AS nom_compagnie, c.code_compagnie AS code
     FROM vols v, compagnie c
     WHERE v.id_compagnie=c.id_compagnie
@@ -63,11 +64,20 @@ if (isset($_POST['search'])) {
     AND ville_arrivee = ? 
     AND date_depart = ?");
     $stmt->execute([$VilleD, $villeA, $date]);
-    $rows= $stmt->fetchAll();
-
+}else{
+    $stmt = $pdo->prepare("SELECT v.id_vols AS id_vols, ville_depart, ville_arrivee, v.places_dispo, v.prix, date_depart, heure_depart, heure_arrivee, c.nom AS nom_compagnie, c.code_compagnie AS code
+    FROM vols v, compagnie c
+    WHERE v.id_compagnie=c.id_compagnie
+    AND ville_depart = ? 
+    AND ville_arrivee = ? 
+    AND date_depart >= CURDATE()");
+    $stmt->execute([$VilleD, $villeA]);
+}
+$rows= $stmt->fetchAll();
 }
 
 $pagestyle = false;
+$infolder = false;
 ?>
 
 <!DOCTYPE html>
@@ -345,7 +355,7 @@ $pagestyle = false;
                 </div>
                 <div class="form-group">
                     <label>Date</label>
-                    <input type="date" name="date" value="2026-06-15" class="form-control" required>
+                    <input type="date" name="date" value="2026-06-15" class="form-control">
                 </div>
                 <div class="d-flex align-items-center justify-content-center mt-3">
                     <button class="btn-search btn btn-primary p-3 text-white" type="submit" name="search">🔍 Rechercher</button>

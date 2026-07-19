@@ -1,9 +1,11 @@
 <?php
-require_once('form/config.php');
-require_once("form/database.php");
+require_once("../form/config.php");
+require_once("../form/database.php");
 
 
 $pagestyle = false;
+$infolder = true;
+$activemenu = 'profil';
 
 $userId = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
@@ -12,7 +14,7 @@ if ($userId === null || $userId <= 0) {
 }
 
 if (!$userId) {
-    header('Location: form/login.php');
+    header('Location:' . SITE_URL .'form/login.php');
     exit;
 }
 
@@ -20,11 +22,18 @@ $_SESSION['user_id'] = $userId;
 
 $stmt = $pdo->prepare("SELECT * FROM user WHERE id = :id");
 $stmt->execute([':id' => $userId]);
-
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+$nbreservstmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE id_user = :id");
+$nbreservstmt->execute([':id' => $userId]);
+$nbreserv = $nbreservstmt->fetchColumn();
+
+$reservstmt = $pdo->prepare("SELECT id_reservation FROM reservations WHERE id_user = :id");
+$reservstmt->execute([':id' => $userId]);
+$reserv = $reservstmt->fetchAll();
+
 if (!$user) {
-    header('Location: form/login.php');
+    header('Location:' . SITE_URL . 'form/login.php');
     exit;
 }
 
@@ -33,6 +42,9 @@ $_SESSION['nom'] = $user['nom'] ?? '';
 $_SESSION['email'] = $user['email'] ?? '';
 $_SESSION['telephone'] = $user['telephone'] ?? '';
 $_SESSION['type'] = $user['type'] ?? '';
+
+$error = "";
+$succes = "";
 
 if (isset($_POST['changeInfo'])) {
     $newNom = trim($_POST['nom'] ?? '');
@@ -55,12 +67,34 @@ if (isset($_POST['changeInfo'])) {
         $_SESSION['email'] = $newEmail;
         $_SESSION['telephone'] = $newTel;
 
-        header('Location: dashboard.php?message=succes');
-        exit;
+        $error = "Une erreur est survenue lors de l’enregistrement.";
     }
+    $succes = "Modifications enregistrées avec succès.";
 
-    header('Location: dashboard.php?message=error');
-    exit;
+}
+if (isset($_POST['changemdp'])) {
+    $ancmdp = trim($_POST['ancmdp']);
+    $newmdp = trim($_POST['newmdp']);
+    $confmdp = trim($_POST['confmdp']);
+
+    if (!password_verify($ancmdp, $user['mdp'])) {
+        $error = "Ancien mot de passe incorrect";
+    }
+    if (!(($newmdp === $confmdp))) {
+        $error = "les mots de passe ne correspondent pas";
+    }
+    
+    if (empty($error)) {
+        $hash = password_hash($newmdp, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("UPDATE user SET mdp = :newmdp WHERE id = :id");
+        $mdpudapted = $stmt->execute([
+            ':newmdp' => $hash,
+            ':id' => $userId
+        ]);
+        if ($mdpudapted) {
+            $succes = "Mot de passe changé avec succès";
+        }   
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -69,7 +103,7 @@ if (isset($_POST['changeInfo'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ReserVols | Mon espace</title>
-    <link rel="stylesheet" href="styl.css">
+    <link rel="stylesheet" href="../styl.css">
     <style>
         .btn-mod{
             transition: 0.2s !important;
@@ -96,9 +130,9 @@ if (isset($_POST['changeInfo'])) {
     </style>
 </head>
 <body>
-    <?php require_once('header.php') ?>
+    <?php require_once('../header.php') ?>
 
-    <section class="hero py-5">
+    <section class="hero w-100 py-5">
         <div class="container py-5">
             <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb mb-0">
@@ -112,47 +146,27 @@ if (isset($_POST['changeInfo'])) {
                     <p class="lead mb-0">Gérez vos réservations, vos favoris et vos informations personnelles depuis votre espace personnel.</p>
                 </div>
                 <div class="col-lg-4 mt-4 mt-lg-0 text-lg-end">
-                    <a href="form/logout.php" class="btn btn-outline-light rounded-pill px-4">Déconnexion</a>
+                    <a href="<?= SITE_URL ?>/form/logout.php" class="btn btn-outline-light rounded-pill px-4">Déconnexion</a>
                 </div>
             </div>
         </div>
     </section>
 
     <div class="container py-5">
-        <div class="row g-4">
-            <div class="col-lg-5">
-                <div class="hero-card p-4 h-100">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center" style="width: 50px; height: 50px; font-size: 1.2rem;">
-                            <?= strtoupper(substr($_SESSION['prenom'] ?? 'U', 0, 1)) ?>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="fw-bold mb-0"><?= htmlspecialchars($_SESSION['prenom'] ?? '') ?> <?= htmlspecialchars($_SESSION['nom'] ?? '') ?></h5>
-                            <div class="text-muted small"><?= htmlspecialchars($_SESSION['email'] ?? '') ?></div>
-                        </div>
-                        <?php if ($_SESSION['type'] === 'admin') {
-                        ?>
-                            <div class="mx-auto d-flex justify-content-end">
-                                <a href="admin.php" class="btn btn-outline-primary rounded-pill">administrateur</a>
-                            </div>
-                        <?php }?>
-                    </div>
-                    <hr>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><i class="fas fa-user-circle me-2 text-primary"></i> Profil</li>
-                        <li class="mb-2"><i class="fas fa-plane me-2 text-primary"></i> Réservations</li>
-                        <li class="mb-2"><i class="fas fa-heart me-2 text-primary"></i> Favoris</li>
-                        <li><i class="fas fa-cog me-2 text-primary"></i> Paramètres</li>
-                    </ul>
-                </div>
-            </div>
-
+        <div class="row g-4 d-flex justify-content-center">
+            <?php require_once('slidebar.php') ?>
             <div class="col-lg-7">
                 <div class="row g-4">
                     <div class="col-md-6">
                         <div class="hero-card p-4 h-100">
                             <h5 class="fw-bold mb-3"><i class="fas fa-plane text-primary me-2"></i> Mes réservations</h5>
-                            <p class="text-muted mb-0">Vous n’avez pas encore de réservation.</p>
+                            <?php if ($nbreserv) {
+                            ?>
+                                <h3 class="fw-semibold mt-4"><?= htmlspecialchars($nbreserv) ?> réservation<?= $reserv > 1 ? 's' : '' ?></h3>
+                            <?php }else {
+                            ?>
+                                <p class="text-muted mb-0">Vous n’avez pas encore de réservation.</p>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -164,23 +178,40 @@ if (isset($_POST['changeInfo'])) {
                     <div class="col-12">
                         <div class="hero-card p-4">
                             <div class="d-flex gap-3 align-items-center border-bottom border-2 mt-3 mb-4">
-                                <button class="bttn rounded-0 fw-bold btn-active" id="info" onclick="showtab('infos', this)"><i class="fas fa-user-edit text-primary me-2"></i> Informations personnelles</button>
-                                <button class="bttn rounded-0 fw-bold text-secondary" id="mdp" onclick="showtab('mdp', this)"><i class="fas fa-lock me-1"></i>mot de passe</button>
+                                <button class="bttn rounded-0 fw-bold btn-active" id="info" onclick="showtab('infos', this)"><i class="fas fa-user-edit me-2"></i> Informations personnelles</button>
+                                <button class="bttn rounded-0 fw-bold text-secondary" id="mdp" onclick="showtab('mdp', this)"><i class="fas fa-lock me-2"></i>mot de passe</button>
                             </div>
+                            <?php
+                                if ($succes) {
+                            ?>
+                                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                                    ✅ <?= htmlspecialchars($succes) ?>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            <?php
+                                } elseif ($error) {
+                            ?>
+                                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                                    ⚠️ <?= htmlspecialchars($error) ?>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            <?php
+                                }
+                            ?>
                             <div id="tab-infos">
                                 <form method="post">
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <label class="form-label">Prénom</label>
-                                            <input type="text" name="prenom" id="prenom" class="form-control" value="<?= htmlspecialchars($_SESSION['prenom'] ?? '') ?>" disabled>
+                                            <input type="text" name="prenom" id="prenom" class="form-control" value="<?= htmlspecialchars($_SESSION['prenom'] ?? '') ?>" disabled required>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Nom</label>
-                                            <input type="text" name="nom" id="nom" class="form-control" value="<?= htmlspecialchars($_SESSION['nom'] ?? '') ?>" disabled>
+                                            <input type="text" name="nom" id="nom" class="form-control" value="<?= htmlspecialchars($_SESSION['nom'] ?? '') ?>" disabled required>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Email</label>
-                                            <input type="email" name="email" id="email" class="form-control" value="<?= htmlspecialchars($_SESSION['email'] ?? '') ?>" disabled>
+                                            <input type="email" name="email" id="email" class="form-control" value="<?= htmlspecialchars($_SESSION['email'] ?? '') ?>" disabled required>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Téléphone</label>
@@ -195,38 +226,20 @@ if (isset($_POST['changeInfo'])) {
                                     <div class="row g-3">
                                         <div class="col-md-12">
                                             <label class="form-label">Ancien mot de passe</label>
-                                            <input type="text" name="ancmdp" id="prenom" class="form-control">
+                                            <input type="password" name="ancmdp" class="form-control" required>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Nouveau mot de passe</label>
-                                            <input type="text" name="newmdp" id="nom" class="form-control">
+                                            <input type="password" name="newmdp" class="form-control" required>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Confirmer</label>
-                                            <input type="email" name="confmdp" id="email" class="form-control">
+                                            <input type="password" name="confmdp" class="form-control" required>
                                         </div>
                                     </div>
-                                    <button type="button" name="" class="px-3 py-2 btn btn-primary my-4 infos fs-6 fw-semibold">Changer le mot de passe</button>
+                                    <button type="submit" name="changemdp" class="px-3 py-2 btn btn-primary my-4 infos fs-6 fw-semibold">Changer le mot de passe</button>
                                 </form>
                             </div>
-                            <?php
-                                $message = $_GET['message'] ?? '';
-                                if ($message === 'succes') {
-                            ?>
-                                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-                                    ✅ Modifications enregistrées avec succès.
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            <?php
-                                } elseif ($message === 'error') {
-                            ?>
-                                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-                                    ⚠️ Une erreur est survenue lors de l’enregistrement.
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            <?php
-                                }
-                            ?>
                         </div>
                     </div>
                 </div>
@@ -234,7 +247,7 @@ if (isset($_POST['changeInfo'])) {
         </div>
     </div>
 
-    <?php require_once('footer.php') ?>
+    <?php require_once('../footer.php') ?>
     <script>
         function modif(){
             const prenom = document.getElementById('prenom');

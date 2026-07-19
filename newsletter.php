@@ -3,6 +3,8 @@ require_once('form/config.php');
 require_once("form/database.php");
 
 $pagestyle = false;
+$infolder = false;
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
