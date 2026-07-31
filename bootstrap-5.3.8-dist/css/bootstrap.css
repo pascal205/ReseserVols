@@ -738,7 +738,7 @@ progress {
   color: var(--bs-secondary-color);
 }
 
-.container,
+/* .container,
 .container-fluid,
 .container-xxl,
 .container-xl,
@@ -746,6 +746,21 @@ progress {
 .container-md,
 .container-sm {
   --bs-gutter-x: 0;
+  --bs-gutter-y: 0;
+  width: 100%;
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-right: auto;
+  margin-left: auto;
+} */
+.container,
+.container-fluid,
+.container-xxl,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+  --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
   width: 100%;
   padding-right: calc(var(--bs-gutter-x) * 0.5);
@@ -8019,6 +8034,15 @@ textarea.form-control-lg {
 .mt-5 {
   margin-top: 3rem !important;
 }
+.mt-7{
+  margin-top: 4.5rem !important;
+}
+.mt-8{
+  margin-top: 6.5rem !important;
+}
+.mt-8{
+  margin-top: 7.5rem !important;
+}
 
 .mt-auto {
   margin-top: auto !important;
@@ -8214,6 +8238,16 @@ textarea.form-control-lg {
 
 .pt-5 {
   padding-top: 3rem !important;
+}
+
+.pt-7 {
+  padding-top: 5rem !important;
+}
+.pt-8 {
+  padding-top: 6.5rem !important;
+}
+.pt-9 {
+  padding-top: 7.5rem !important;
 }
 
 .pe-0 {

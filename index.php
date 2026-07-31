@@ -18,15 +18,17 @@ $volDispos = $pdo->query("SELECT v.id_vols AS id_vol, ville_depart, ville_arrive
                 WHERE date_depart >= CURDATE()
                 ORDER BY date_depart ASC, heure_depart ASC LIMIT 4")->fetchAll();
 $pagestyle = true;
-$infolder = false;
-
+$heroPage = true;
+$activepage = 'Accueil';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
         <?php include("header.php")?>
-           <section class="hero pt-4 pb-5">
-                <div class="pt-4 hero-grid d-flex align-items-center gap-3">
+           <section class="hero pb-5">
+            <div class="hero-bg"></div>
+            <div class="hero-overlay"></div>
+                <div class="hero-cont pt-9 hero-grid d-flex align-items-center gap-3">
                     <div class="hero-content">
                         <h1>Réservez votre vol en quelques clics.</h1>
                         <p>Trouvez le vol idéal, comparez les horaires et finalisez votre réservation rapidement avec ReservVols.</p>
@@ -63,13 +65,13 @@ $infolder = false;
         
          <section id="vols" class="mt-5">
             <div class="container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex gap-2">
-                        <h2 class="section-title">✈️ Vols disponibles</h2>
+                <div class="vol-header justify-content-between align-items-center">
+                    <div class="gap-2 vol-head align-items-center">
+                        <h2 class="section-title fs-2">✈️ Vols disponibles</h2>
                         <p class="badge rounded-pill mt-3 text-black" style="">Mise à jour en temps réel — 13/04/2026</p>
                     </div>
                     <div class="">
-                        <a href="vol.php?donnee=default" class="text-primary d-flex text-decoration-none align-items-center" id="quickSearchBtn" href="vol.php">Pacourez tous les vols <i class="fas fa-arrow-right"></i></a>
+                        <a href="vol.php?donnee=default" class="text-primary d-flex text-decoration-none align-items-center" id="quickSearchBtn">Pacourez tous les vols <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <p class="section-sub m-2">Parcourez les vols disponibles et choisissez votre convenance — 13 avril 2026</p>
@@ -358,56 +360,57 @@ $infolder = false;
                     <div class="testimonial-card"><i class="fas fa-quote-left fa-2x"></i><p>“Voyage aux États-Unis réussi grâce à la carte interactive et aux réservations intégrées.”</p><strong>— Georges & Emma</strong></div>
                 </div> -->
                 <div class="swiper avis-swiper">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide active-slide">
-                <div class="testimonial-card"><i class="fas fa-quote-left fa-2x"></i><p>“Grâce à ReservVols, j’ai organisé un voyage parfait en Italie. Suggestions d’activités incroyables.”</p><strong>— Marie Simon</strong></div>    
-            </div>
-            <div class="swiper-slide">
-                <div class="testimonial-card"><i class="fas fa-quote-left fa-2x"></i><p>“Organisation au top pour notre lune de miel à Bali. L’assistance réactive et les prix clairs.”</p><strong>— Chloé & Lucas</strong></div>
-            </div>
-            <div class="swiper-slide">
-                <div class="testimonial-card"><i class="fas fa-quote-left fa-2x"></i><p>“Voyage aux États-Unis réussi grâce à la carte interactive et aux réservations intégrées.”</p><strong>— Georges & Emma</strong></div>
-            </div>
-        </div>
-        <div class="swiper-pagination"></div>
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide active-slide">
+                            <div class="testimonial-card"><i class="fas fa-quote-left fa-2x"></i><p>“Grâce à ReservVols, j’ai organisé un voyage parfait en Italie. Suggestions d’activités incroyables.”</p><strong>— Marie Simon</strong></div>    
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="testimonial-card"><i class="fas fa-quote-left fa-2x"></i><p>“Organisation au top pour notre lune de miel à Bali. L’assistance réactive et les prix clairs.”</p><strong>— Chloé & Lucas</strong></div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="testimonial-card"><i class="fas fa-quote-left fa-2x"></i><p>“Voyage aux États-Unis réussi grâce à la carte interactive et aux réservations intégrées.”</p><strong>— Georges & Emma</strong></div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
         </div>
         </section>
 
         <?php require_once("footer.php"); ?>
         
     <script>
-        //     const swiperAvis = new Swiper('.avis-swiper', {
-        //     loop: true,
-        //     centeredSlides: true,
-        //     slidesPerView: 3,      // ← montre un peu des slides adjacentes
-        //     spaceBetween: 24,
-        //     speed: 700,
-        //     autoplay: {
-        //         delay: 3500,
-        //         disableOnInteraction: false,
-        //         pauseOnMouseEnter: true,
-        //     },
-        //     breakpoints: {
-        //         640: {
-        //             slidesPerView: 1,
-        //             spaceBetween: 18,
-        //         },
-        //         1024: {
-        //             slidesPerView: 2,
-        //             spaceBetween: 24,
-        //         },
-        //     },
-        //     pagination: {
-        //         el: '.swiper-pagination',
-        //         clickable: true,
-        //         type: 'bullets',
-        //         dynamicBullets: true,
-        //     },
-        //     navigation: {
-        //         nextEl: '.swiper-button-next',
-        //         prevEl: '.swiper-button-prev',
-        //     },
-        // });
+            const swiperAvis = new Swiper('.avis-swiper', {
+            loop: true,
+            centeredSlides: true,
+            slidesPerView: 3,      // ← montre un peu des slides adjacentes
+            spaceBetween: 24,
+            speed: 700,
+            autoplay: {
+                delay: 3500,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 1,
+                    spaceBetween: 18,
+                },
+                1024: {
+                    slidesPerView: 2,
+                    spaceBetween: 24,
+                },
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                type: 'bullets',
+                dynamicBullets: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
 
         function hideStats() {
             const stats = document.getElementById('heroStats');

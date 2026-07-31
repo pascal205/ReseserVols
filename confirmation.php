@@ -25,6 +25,8 @@ JOIN compagnie c ON v.id_compagnie = c.id_compagnie
 WHERE v.id_vols = ?");
 $stmt->execute([$confirmation['id_vols']]);
 $vol = $stmt->fetch();
+
+$activepage = ' ';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -36,7 +38,6 @@ $vol = $stmt->fetch();
 </head>
 <body>
     <?php require_once('header.php') ?>
-
     <section class="hero py-5">
         <div class="container py-4 text-center">
             <span class="badge rounded-pill bg-white text-dark px-3 py-2 fs-6 mb-3">Paiement accepté</span>

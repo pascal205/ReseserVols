@@ -1,101 +1,6 @@
 <?php
-require_once("../form/config.php");
-require_once("../form/database.php");
-
-
-$pagestyle = false;
-$infolder = true;
+require "require.php";
 $activemenu = 'profil';
-
-$userId = isset($_GET['id']) ? (int)$_GET['id'] : null;
-
-if ($userId === null || $userId <= 0) {
-    $userId = $_SESSION['user_id'] ?? null;
-}
-
-if (!$userId) {
-    header('Location:' . SITE_URL .'form/login.php');
-    exit;
-}
-
-$_SESSION['user_id'] = $userId;
-
-$stmt = $pdo->prepare("SELECT * FROM user WHERE id = :id");
-$stmt->execute([':id' => $userId]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$nbreservstmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE id_user = :id");
-$nbreservstmt->execute([':id' => $userId]);
-$nbreserv = $nbreservstmt->fetchColumn();
-
-$reservstmt = $pdo->prepare("SELECT id_reservation FROM reservations WHERE id_user = :id");
-$reservstmt->execute([':id' => $userId]);
-$reserv = $reservstmt->fetchAll();
-
-if (!$user) {
-    header('Location:' . SITE_URL . 'form/login.php');
-    exit;
-}
-
-$_SESSION['prenom'] = $user['prenom'] ?? '';
-$_SESSION['nom'] = $user['nom'] ?? '';
-$_SESSION['email'] = $user['email'] ?? '';
-$_SESSION['telephone'] = $user['telephone'] ?? '';
-$_SESSION['type'] = $user['type'] ?? '';
-
-$error = "";
-$succes = "";
-
-if (isset($_POST['changeInfo'])) {
-    $newNom = trim($_POST['nom'] ?? '');
-    $newPrenom = trim($_POST['prenom'] ?? '');
-    $newEmail = trim($_POST['email'] ?? '');
-    $newTel = trim($_POST['telephone'] ?? '');
-
-    $updateStmt = $pdo->prepare("UPDATE user SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone WHERE id = :id");
-    $updated = $updateStmt->execute([
-        ':nom' => $newNom,
-        ':prenom' => $newPrenom,
-        ':email' => $newEmail,
-        ':telephone' => $newTel,
-        ':id' => $userId
-    ]);
-
-    if ($updated) {
-        $_SESSION['prenom'] = $newPrenom;
-        $_SESSION['nom'] = $newNom;
-        $_SESSION['email'] = $newEmail;
-        $_SESSION['telephone'] = $newTel;
-
-        $error = "Une erreur est survenue lors de l’enregistrement.";
-    }
-    $succes = "Modifications enregistrées avec succès.";
-
-}
-if (isset($_POST['changemdp'])) {
-    $ancmdp = trim($_POST['ancmdp']);
-    $newmdp = trim($_POST['newmdp']);
-    $confmdp = trim($_POST['confmdp']);
-
-    if (!password_verify($ancmdp, $user['mdp'])) {
-        $error = "Ancien mot de passe incorrect";
-    }
-    if (!(($newmdp === $confmdp))) {
-        $error = "les mots de passe ne correspondent pas";
-    }
-    
-    if (empty($error)) {
-        $hash = password_hash($newmdp, PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare("UPDATE user SET mdp = :newmdp WHERE id = :id");
-        $mdpudapted = $stmt->execute([
-            ':newmdp' => $hash,
-            ':id' => $userId
-        ]);
-        if ($mdpudapted) {
-            $succes = "Mot de passe changé avec succès";
-        }   
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -132,7 +37,7 @@ if (isset($_POST['changemdp'])) {
 <body>
     <?php require_once('../header.php') ?>
 
-    <section class="hero w-100 py-5">
+    <section class="hero w-100 py-5 mt-7">
         <div class="container py-5">
             <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb mb-0">
@@ -154,15 +59,17 @@ if (isset($_POST['changemdp'])) {
 
     <div class="container py-5">
         <div class="row g-4 d-flex justify-content-center">
-            <?php require_once('slidebar.php') ?>
+            <div class="col-lg-auto">
+                <?php require_once('slidebar.php') ?>
+            </div>
             <div class="col-lg-7">
                 <div class="row g-4">
                     <div class="col-md-6">
                         <div class="hero-card p-4 h-100">
-                            <h5 class="fw-bold mb-3"><i class="fas fa-plane text-primary me-2"></i> Mes réservations</h5>
+                            <h5 class="fw-bold mb-3 text-center"><i class="fas fa-plane text-primary me-2"></i> Mes réservations</h5>
                             <?php if ($nbreserv) {
                             ?>
-                                <h3 class="fw-semibold mt-4"><?= htmlspecialchars($nbreserv) ?> réservation<?= $reserv > 1 ? 's' : '' ?></h3>
+                                <p class="fs-1 fw-semibold text-center"><span class="text-primary"><?= htmlspecialchars($nbreserv) ?></span></p>
                             <?php }else {
                             ?>
                                 <p class="text-muted mb-0">Vous n’avez pas encore de réservation.</p>
@@ -171,7 +78,7 @@ if (isset($_POST['changemdp'])) {
                     </div>
                     <div class="col-md-6">
                         <div class="hero-card p-4 h-100">
-                            <h5 class="fw-bold mb-3"><i class="fas fa-heart text-primary me-2"></i> Mes favoris</h5>
+                            <h5 class="fw-bold mb-3 text-center"><i class="fas fa-heart text-primary me-2"></i> Mes favoris</h5>
                             <p class="text-muted mb-0">Ajoutez vos vols préférés pour les retrouver rapidement.</p>
                         </div>
                     </div>

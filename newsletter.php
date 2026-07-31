@@ -4,6 +4,8 @@ require_once("form/database.php");
 
 $pagestyle = false;
 $infolder = false;
+$activepage = ' ';
+
 
 ?>
 <!DOCTYPE html>

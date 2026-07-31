@@ -34,6 +34,8 @@ $aeroport_departs = $stmt->fetchAll();
 $stmt = $pdo->prepare("SELECT * FROM aeroport WHERE ville = ?");
 $stmt->execute([$villeAv]);
 $aeroport_arrivee = $stmt->fetchAll();
+
+$activepage = ' ';
 ?>
 <!DOCTYPE html>
 <html lang="fr">

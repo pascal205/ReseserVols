@@ -1,6 +1,6 @@
 <?php
-require_once("form/config.php");
-require_once("form/database.php");
+require_once("../form/config.php");
+require_once("../form/database.php");
 
 
 if (isset($_POST['insert'])) {
@@ -43,10 +43,11 @@ if (isset($_POST['insert'])) {
     $comps = $pdo->query("SELECT id_compagnie AS id, nom, code_compagnie FROM compagnie")->fetchAll();
 $pagestyle = false;
 $infolder = false;
+$activepage = ' ';
 ?>
-<?php include 'header.php'; ?>
+<?php require  '../header.php'; ?>
 
-<main class="container my-5">
+<main style="margin-top: 8rem;" class="container">
     <section class="row align-items-center gy-5">
         <div class="col-lg-7">
             <div class="bg-white rounded-4 shadow-sm p-5">
@@ -198,6 +199,8 @@ $infolder = false;
 </main>
 
 <script>
+const airportsUrl = '<?= SITE_URL ?>/get_airports.php';
+
 // Fonction pour récupérer les aéroports et remplir le select
 async function loadAirports(inputId, selectId) {
     const inputElement = document.getElementById(inputId);
@@ -213,8 +216,10 @@ async function loadAirports(inputId, selectId) {
             return;
         }
         
+        selectElement.innerHTML = '<option value="">Aucun aéroport trouvé</option>';
+
         try {
-            const response = await fetch(`get_airports.php?ville=${encodeURIComponent(ville)}`);
+            const response = await fetch(`${airportsUrl}?ville=${encodeURIComponent(ville)}`);
             const airports = await response.json();
             
             if (Array.isArray(airports) && airports.length > 0) {
@@ -240,6 +245,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php include 'footer.php'; ?>
+<?php require   '../footer.php'; ?>
 </body>
 </html>

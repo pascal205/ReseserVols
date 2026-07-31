@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ville'])) {
     }
     
     try {
-        $stmt = $pdo->prepare("SELECT id_aeroport, nom, code_aeroport FROM aeroport WHERE ville LIKE :ville ORDER BY nom");
+        $stmt = $pdo->prepare("SELECT id_aeroport, nom, code_aeroport FROM aeroport WHERE ville LIKE :ville ORDER BY nom ASC");
         $stmt->execute([':ville' => '%' . $ville . '%']);
         $aeroports = $stmt->fetchAll(PDO::FETCH_ASSOC);
         

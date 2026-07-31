@@ -6,16 +6,16 @@
                 <h5 class="fw-bold mb-3">ReservVols</h5>
                 <p class="text-white">Réservez vos vols en toute confiance, gérez facilement vos billets et recevez une assistance dédiée.</p>
                 <div class="d-flex gap-3 mt-3">
-                    <a href="#" class="text-white text-decoration-none hover-primary" title="Facebook">
+                    <a href="#" class="reseau-link text-white text-decoration-none hover-primary" title="Facebook">
                         <i class="fab fa-facebook-f fa-lg"></i>
                     </a>
-                    <a href="#" class="text-white text-decoration-none hover-primary" title="Twitter">
+                    <a href="#" class="reseau-link text-white text-decoration-none hover-primary" title="Twitter">
                         <i class="fab fa-twitter fa-lg"></i>
                     </a>
-                    <a href="#" class="text-white text-decoration-none hover-primary" title="Instagram">
+                    <a href="#" class="reseau-link text-white text-decoration-none hover-primary" title="Instagram">
                         <i class="fab fa-instagram fa-lg"></i>
                     </a>
-                    <a href="#" class="text-white text-decoration-none hover-primary" title="LinkedIn">
+                    <a href="#" class="reseau-link text-white text-decoration-none hover-primary" title="LinkedIn">
                         <i class="fab fa-linkedin-in fa-lg"></i>
                     </a>
                 </div>
@@ -77,3 +77,40 @@
         </div>
     </div>
 </footer>
+<script src="<?= SITE_URL?>/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const nav = document.getElementById('navbar');
+    <?php if($heroPage): ?>
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > 40) {
+            nav.classList.add('scrolled');
+        }else{
+            nav.classList.remove('scrolled');
+        }
+    });
+
+    function navbarsolid(nav) {
+        if (window.innerWidth <= 1024) {
+            nav.classList.remove("hero-mode");
+
+            nav.classList.add("solid-mode");
+            nav.classList.add("position-fixed");
+        }else{
+            if (!document.querySelectorAll(".hero-mode")) {
+                nav.classList.add("hero-mode");
+            }
+            nav.classList.remove("solid-mode");
+            nav.classList.remove("position-fixed");
+        }
+        console.log(nav);
+        
+    }
+    window.addEventListener("load", navbarsolid(nav));
+    window.addEventListener("resize", navbarsolid(nav));
+
+    <?php endif?>
+    // window.addEventListener("load", navbarsolid(nav));
+    // window.addEventListener("resize", navbarsolid(nav));
+    
+    // window.addEventListener('scroll', () => nav.classList.toggle('bg-white', window.scrollY > 40));
+</script>

@@ -4,18 +4,50 @@
     color:#3e5a6b;
 } */
 .hero{
-    height: 70vh;
+    height: 80vh;
     /* background: linear-gradient(120deg, #eef5fa 0%, #ffffff 100%); */
+    padding: 8rem 5rem ;
+    border-bottom: 1px solid rgba(44,125,160,0.1);
+    position: relative;
+    overflow: hidden;
+}
+.hero .hero-bg{
+    position: absolute;
+    inset: 0;
     background-image: url(images/arrplanut.png);
     background-size: cover;
     background-repeat: no-repeat;
-    padding: 30px 50px ;
-    border-bottom: 1px solid rgba(44,125,160,0.1);
+}
+.hero .hero-overlay{
+    position: absolute;
+    inset: 0;
+    /* background: linear-gradient(
+        135deg,
+        rgba(10, 20, 45, .92)  0%,
+        rgba(15, 34, 64, .80) 50%,
+        rgba(26, 53, 96, .65) 100%
+    ); */
+    /* background: linear-gradient(
+        135deg,
+        #bcdcea8e  0%,
+        #b9d0da67 50%,
+        #a8b8c038 100%
+    ); */
+    background: linear-gradient(
+        135deg,
+        rgba(230, 205, 169, 0.822)  0%,
+        rgba(230, 209, 180, 0.596) 50%,
+        rgba(241, 220, 191, 0.37) 100%
+    );
+}
+.hero-cont{
+    z-index: 10;
 }
 /* .hero-grid{
     flex-wrap: wrap;
 } */
 .hero-content{
+    z-index: 10;
     width: 60%;
 }
 .hero-content h1{
@@ -61,6 +93,7 @@
 
 @media (max-width: 768px) {
     .hero{
+        /* margin-top: 20px; */
         height: auto;
         background-size: cover;
         background-position: center;
@@ -92,6 +125,13 @@
     color: #2c7da0;
     /* min-width: 480px; */
 }
+.vol-head{
+    display: flex;
+}
+.vol-header{
+    display: flex;
+}
+
 #apropos{
     padding: 60px 0 30px;
 }
@@ -344,6 +384,12 @@
         display: block;
     }
     .hero-stats{
+        display: none !important;
+    }
+    .vol-head{
+        display: block;
+    }
+    .vol-header{
         display: block;
     }
 }

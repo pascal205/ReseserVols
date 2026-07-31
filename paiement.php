@@ -5,6 +5,8 @@ require_once("form/database.php");
 
 $pagestyle = false;
 $infolder = false;
+$activepage = ' ';
+
 
 $idvol = (int)($_GET['id'] ?? $_POST['id_vols'] ?? 0);
 $iduser = (int)($_POST['id_user']);

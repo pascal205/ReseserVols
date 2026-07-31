@@ -12,9 +12,16 @@ if (empty($donne)) {
     $villeAv = "";
     $dateDepart = "";
 }
-if (empty($donne) && empty($VilleDp)) {
-    redirect('index.php');
-}
+// if (empty($donne) && empty($VilleDp)) {
+//     redirect('index.php');
+// }
+// if (empty($donne) && empty($VilleDp)) {
+//     $rows = $pdo->query("SELECT v.id_vols AS id_vols, ville_depart, ville_arrivee, v.places_dispo, v.prix, date_depart, heure_depart, heure_arrivee, c.nom AS nom_compagnie, c.code_compagnie AS code
+//                             FROM vols v, compagnie c
+//                             WHERE v.id_compagnie=c.id_compagnie
+//                             AND date_depart >= CURDATE()
+//                             ORDER BY date_depart ASC, heure_depart ASC")->fetchAll();
+// }
 
 if($VilleDp && $dateDepart) {
     $a = "date";
@@ -23,25 +30,26 @@ if($VilleDp && $dateDepart) {
 }else{
     $a = '';
 }
-
 if($donne === "default")            $rows = $pdo->query("SELECT v.id_vols AS id_vols, ville_depart, ville_arrivee, v.places_dispo, v.prix, date_depart, heure_depart, heure_arrivee, c.nom AS nom_compagnie, c.code_compagnie AS code
-                                    FROM vols v, compagnie c
-                                    WHERE v.id_compagnie=c.id_compagnie
-                                    AND date_depart >= CURDATE()
-                                    ORDER BY date_depart ASC, heure_depart ASC")->fetchAll();
-if($a === "date"){           $sql = "SELECT v.id_vols AS id_vols, ville_depart, ville_arrivee, v.places_dispo, v.prix, date_depart, heure_depart, heure_arrivee, c.nom AS nom_compagnie, c.code_compagnie AS code
-                                    FROM vols v, compagnie c
-                                    WHERE v.id_compagnie=c.id_compagnie
-                                    AND ville_depart LIKE :villeD
-                                    AND ville_arrivee LIKE :villeA
-                                    AND date_depart = :dateDepart";
-                            $execute = [':villeD' => '%' . $VilleDp . '%', ':villeA' =>'%' . $villeAv . '%', ':dateDepart' => $dateDepart];
-}else if($a === "nodate"){   $sql = "SELECT v.id_vols AS id_vols, ville_depart, ville_arrivee, v.places_dispo, v.prix, date_depart, heure_depart, heure_arrivee, c.nom AS nom_compagnie, c.code_compagnie AS code
-                                    FROM vols v, compagnie c
-                                    WHERE v.id_compagnie=c.id_compagnie
-                                    AND ville_depart LIKE :villeD
-                                    AND ville_arrivee LIKE :villeA";
-                            $execute = [':villeD' =>'%' . $VilleDp . '%', ':villeA' => '%' . $villeAv . '%'];
+                                        FROM vols v, compagnie c
+                                        WHERE v.id_compagnie=c.id_compagnie
+                                        AND date_depart >= CURDATE()
+                                        ORDER BY date_depart ASC, heure_depart ASC")->fetchAll();
+if($a === "date"){                  $sql = "SELECT v.id_vols AS id_vols, ville_depart, ville_arrivee, v.places_dispo, v.prix, date_depart, heure_depart, heure_arrivee, c.nom AS nom_compagnie, c.code_compagnie AS code
+                                        FROM vols v, compagnie c
+                                        WHERE v.id_compagnie=c.id_compagnie
+                                        AND ville_depart LIKE :villeD
+                                        AND ville_arrivee LIKE :villeA
+                                        AND date_depart = :dateDepart
+                                        AND date_depart >= CURDATE()";
+                                    $execute = [':villeD' => '%' . $VilleDp . '%', ':villeA' =>'%' . $villeAv . '%', ':dateDepart' => $dateDepart];
+}else if($a === "nodate"){          $sql = "SELECT v.id_vols AS id_vols, ville_depart, ville_arrivee, v.places_dispo, v.prix, date_depart, heure_depart, heure_arrivee, c.nom AS nom_compagnie, c.code_compagnie AS code
+                                        FROM vols v, compagnie c
+                                        WHERE v.id_compagnie=c.id_compagnie
+                                        AND ville_depart LIKE :villeD
+                                        AND ville_arrivee LIKE :villeA
+                                        AND date_depart >= CURDATE()";
+                                    $execute = [':villeD' =>'%' . $VilleDp . '%', ':villeA' => '%' . $villeAv . '%'];
 }else {
     $sql = '';
 }
@@ -77,7 +85,8 @@ $rows= $stmt->fetchAll();
 }
 
 $pagestyle = false;
-$infolder = false;
+$heroPage = false;
+$activepage = 'Vols';
 ?>
 
 <!DOCTYPE html>
@@ -91,7 +100,7 @@ $infolder = false;
             background-image: url(images/arrplanut.png);
             background-size: cover;
             background-position: center;
-            padding: 6rem 2rem 8rem;
+            padding: 10rem 2rem;
             position: relative;
             overflow: hidden;
         }
@@ -160,6 +169,11 @@ $infolder = false;
             padding: 1.5rem 2rem;
             z-index: 2;
             gap: 1rem;
+            transition: 0.30s;
+        }
+        .flight-card:hover{
+            transform: translateY(-6px);
+            box-shadow: 0 25px 40px rgba(0,0,0,0.1);
         }
         .flight-route {
             flex-wrap: wrap;
@@ -376,7 +390,7 @@ $infolder = false;
         ?>
         <div class="flights-grid">
             
-            <div class="flight-card position-relative row justify-content-between align-items-center px-3 py-4 my-5">
+            <div class="flight-card position-relative row justify-content-between align-items-center px-3 pt-4 pb-3 my-5">
                 <div class="promo-badge rounded-pill w-auto">−35%</div>
                 <div class="flight-airline col-md-3 d-flex align-items-center ">
                     <div class="airline-logo<?php if($vol['nom_compagnie']=='Air France'){echo ' air-france';}elseif($vol['nom_compagnie']=='emirate'){echo ' emirate';}elseif($vol['nom_compagnie']=='Bruxelle'){echo ' bruxelle';}else{echo ' air-france';} ?> d-flex justify-content-center align-items-center me-3"><?php
@@ -425,7 +439,6 @@ $infolder = false;
         </div>
         <?php }?>
     </section>
-
     <?php include("footer.php") ?>
 </body>
 </html>

@@ -28,6 +28,8 @@ $prenom = $_SESSION['prenom'] ?? '';
 $nom = $_SESSION['nom'] ?? '';
 $email = $_SESSION['email'] ?? '';
 $telephone = $_SESSION['telephone'] ?? '';
+
+$activepage = ' ';
 ?>
 <!DOCTYPE html>
 <html lang="fr">

@@ -19,6 +19,8 @@ if (isset($_POST['connexion'])) {
             $_SESSION['nom'] = $row['nom'];
             $_SESSION['prenom'] = $row['prenom'];
             $_SESSION['email'] = $row['email'];
+            $stmt = $pdo->prepare("UPDATE user SET date_connect = NOW() WHERE id = ?");
+            $stmt->execute([$_SESSION["user_id"]]);
             header("Location: ../index.php");
         }else {
             $erreurs = "Email ou mot de passe incorrect ";
