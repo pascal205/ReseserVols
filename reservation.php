@@ -23,7 +23,7 @@ if (!$vol) {
 }
 
 $hasProfile = !empty($_SESSION['prenom']) || !empty($_SESSION['nom']) || !empty($_SESSION['email']) || !empty($_SESSION['telephone']);
-$iduser = $_SESSION['user_id'];
+$iduser = $_SESSION['user_id'] ?? 0;
 $prenom = $_SESSION['prenom'] ?? '';
 $nom = $_SESSION['nom'] ?? '';
 $email = $_SESSION['email'] ?? '';

@@ -135,3 +135,14 @@ body {
     border: 1px solid #d9efff;
     font-weight: 600;
 }
+/* .entet-reserv{
+    animation: anim 2s forwards;
+}
+@keyframes anim {
+    from{
+        opacity: 0.8;
+    }
+    to{
+        opacity: 1;
+    }
+} */

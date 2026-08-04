@@ -4,7 +4,7 @@
     color:#3e5a6b;
 } */
 .hero{
-    height: 80vh;
+    height: auto;
     /* background: linear-gradient(120deg, #eef5fa 0%, #ffffff 100%); */
     padding: 8rem 5rem ;
     border-bottom: 1px solid rgba(44,125,160,0.1);

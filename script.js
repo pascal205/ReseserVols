@@ -1,4 +1,17 @@
-const nav = document.getElementById('navbar');
-const nav = document.querySelectorAll()
+ document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".reservation-card").forEach((card) => {
+                const fav = card.querySelector(".entete-reserv");
+                if (!fav) return;
 
-nav.classList('e')
+                card.addEventListener("mouseenter", () => favvisible(fav));
+                card.addEventListener("mouseleave", () => favhidden(fav));
+            });
+        });
+
+        function favvisible(element) {
+            element.style.display = "flex";
+        }
+
+        function favhidden(element) {
+            element.style.display = "none";
+        }

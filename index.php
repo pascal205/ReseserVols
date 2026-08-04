@@ -28,7 +28,7 @@ $activepage = 'Accueil';
            <section class="hero pb-5">
             <div class="hero-bg"></div>
             <div class="hero-overlay"></div>
-                <div class="hero-cont pt-9 hero-grid d-flex align-items-center gap-3">
+                <div class="hero-cont pt-4 hero-grid d-flex align-items-center gap-3">
                     <div class="hero-content">
                         <h1>Réservez votre vol en quelques clics.</h1>
                         <p>Trouvez le vol idéal, comparez les horaires et finalisez votre réservation rapidement avec ReservVols.</p>

@@ -128,10 +128,10 @@
                     <li class="nav-item fw-bold"><a class="nav-link <?php // if ($_SERVER['SCRIPT_NAME'] === 'rservVols/index.php'):?> link-active <?php // endif ?> px-0 me-3" href="index.php#planning">Planification</a></li>
                     <li class="nav-item fw-bold"><a class="nav-link <?php // if ($_SERVER['SCRIPT_NAME'] === 'rservVols/index.php'):?> link-active <?php // endif ?> px-0 me-3" href="index.php#avis">Avis</a></li>
                     <li class="nav-item fw-bold"><a class="nav-link <?php // if ($_SERVER['SCRIPT_NAME'] === 'rservVols/index.php'):?> link-active <?php // endif ?> px-0 me-3" href="index.php#contact">Contact</a></li> -->
-                    <?=  nav_item('Accueil', 'index.php', '', '', $activepage) ?>
+                    <?=  nav_item('Accueil', 'index.php', '', '', $activepage ?? ' ') ?>
                     <?=  nav_item('Destinations', 'index.php#destinations') ?>
                     <?=  nav_item('Planification', 'index.php#planning') ?>
-                    <?=  nav_item('Vols', 'vol.php?donnee=default', '', '', $activepage) ?>
+                    <?=  nav_item('Vols', 'vol.php?donnee=default', '', '', $activepage ?? ' ') ?>
                     <?=  nav_item('Avis', 'index.php#avis') ?>
                     <?=  nav_item('Contact', 'index.php#contact') ?>
                 </ul>

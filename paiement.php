@@ -9,11 +9,11 @@ $activepage = ' ';
 
 
 $idvol = (int)($_GET['id'] ?? $_POST['id_vols'] ?? 0);
-$iduser = (int)($_POST['id_user']);
+$iduser = (int)($_POST['id_user'] ?? 0);
 $nbPersonnes = max(1, min(5, (int)($_GET['nb'] ?? $_POST['nb_personnes'] ?? 1)));
 
 if (!$idvol && !$iduser) {
-    redirect("planning.php");
+    redirect("reservation.php");
 }
 
 $stmt = $pdo->prepare("SELECT *, c.nom AS nom_compagnie, c.code_compagnie AS code_compagnie

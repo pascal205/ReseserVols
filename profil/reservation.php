@@ -2,7 +2,7 @@
 require "require.php";
 $activemenu = 'reservation';
 
-$reservationstmt = $pdo->prepare("SELECT v.date_depart, v.date_arrivee, v.heure_depart, v.heure_arrivee, v.ville_depart, v.ville_arrivee, v.prix, c.nom AS nom_compagnie, c.code_compagnie, ad.nom AS nom_adepart, ad.code_aeroport AS code_ad, aa.nom AS nom_aarivee, aa.code_aeroport AS code_aa, r.nb_personnes, r.reference, r.date_reservation, r.statut
+$reservationstmt = $pdo->prepare("SELECT r.id_reservation AS idreserv, v.date_depart, v.date_arrivee, v.heure_depart, v.heure_arrivee, v.ville_depart, v.ville_arrivee, v.prix, c.nom AS nom_compagnie, c.code_compagnie, ad.nom AS nom_adepart, ad.code_aeroport AS code_ad, aa.nom AS nom_aarivee, aa.code_aeroport AS code_aa, r.nb_personnes, r.reference, r.date_reservation, r.statut
                                     FROM vols v, compagnie c, aeroport ad, aeroport aa, reservations r, user
                                     WHERE r.id_user = user.id
                                     AND r.id_vols = v.id_vols
@@ -12,8 +12,22 @@ $reservationstmt = $pdo->prepare("SELECT v.date_depart, v.date_arrivee, v.heure_
                                     AND user.id = ?");
 $reservationstmt->execute([$userId]);
 $inforeserv = $reservationstmt->fetchAll();
+
 if (!$inforeserv) {
     redirect('profil/dashboard.php');
+}
+function isfavoris(int $idreserv, int $userId, $pdo) : bool {
+    $favstmt = $pdo->prepare("SELECT * FROM favoris WHERE id_user = :iduser AND id_reserv = :idreserv");
+    $favstmt->execute([
+        ':iduser' => $userId,
+        ':idreserv' => $idreserv
+    ]);
+    $favReservations = $favstmt->fetchAll(PDO::FETCH_COLUMN);
+    if ($favReservations) {
+        return true;
+    }else {
+        return false;
+    }
 }
 ?>
 
@@ -24,6 +38,27 @@ if (!$inforeserv) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes réservations</title>
     <link rel="stylesheet" href="../styl.css">
+    <style>
+        .reservation-card{
+            position: relative;
+        }
+        .entete-reserv{
+            visibility: visible;
+            margin-top: -20px;
+            transition: 3s;
+            animation: anim 2s forwards;
+
+        }
+        .favoris a{
+            color: #6c757d;
+        }
+        .fav-active a{
+            color: #ef4444;
+        }
+        .favoris a:hover{
+            color: #ef4444;
+        }
+    </style>
 </head>
 <body>
     <?php require_once('../header.php'); ?>
@@ -33,9 +68,17 @@ if (!$inforeserv) {
             <div class="col-lg-auto">
                 <?php require "slidebar.php"; ?>
             </div>
-            <?php foreach ($inforeserv as $reservation): ?>
             <div class="col-lg-9 col-xl-7">
-                <div class="reservation-card hero-card p-4 p-md-5">
+            <?php foreach ($inforeserv as $reservation): ?>
+                <div class="reservation-card hero-card p-md-4 mb-4">
+                    <div class="d-flex align-items-center justify-content-end entete-reserv mb-3 mt-1">
+                        <?php //$isFav = in_array($reservation['idreserv'], $favReservations, true); ?>
+                        <?php if (isfavoris((int) $reservation['idreserv'], $userId, $pdo)): ?>
+                            <h6 class="fw-bold favoris fav-active"><a href="favoris_action.php?id=<?= $reservation['idreserv'] ?>" class="text-decoration-none"><i class="fas fa-heart"></i> Ajoutée aux favoris</a></h6>
+                        <?php else: ?>
+                            <h6 class="fw-bold favoris"><a href="favoris_action.php?id=<?= $reservation['idreserv'] ?>" class="text-decoration-none"><i class="fas fa-heart"></i> Ajouter aux favoris</a></h6>
+                        <?php endif ?>
+                    </div>
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
                         <div>
                             <p class="text-muted mb-1">Référence de réservation</p>
@@ -87,11 +130,25 @@ if (!$inforeserv) {
                         <button class="btn btn-outline-custom">Voir les détails</button>
                     </div>
                 </div>
-            </div>
         <?php endforeach; ?>
+            </div>
     </div>
     <script>
-        
+    //    document.addEventListener('DOMContentLoaded', () => {
+    //     document.querySelectorAll(".reservation-card").forEach((card) => {
+    //         const fav = document.querySelector('.entete-reserv');
+    //         if (!fav) return;
+
+    //         card.addEventListener('mouseenter', ()=> favvisible(fav));
+    //         card.addEventListener('mouseleave', ()=> favhide(fav));
+    //     });
+    //    })
+    //    function favvisible(element) {
+    //     element.style.visibility = 'visible';
+    //    }
+    //    function favhide(element) {
+    //     element.style.visibility = 'hidden';
+    //    }
     </script>
 </body>
 </html>

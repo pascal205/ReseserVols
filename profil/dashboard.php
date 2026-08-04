@@ -78,8 +78,14 @@ $activemenu = 'profil';
                     </div>
                     <div class="col-md-6">
                         <div class="hero-card p-4 h-100">
-                            <h5 class="fw-bold mb-3 text-center"><i class="fas fa-heart text-primary me-2"></i> Mes favoris</h5>
-                            <p class="text-muted mb-0">Ajoutez vos vols préférés pour les retrouver rapidement.</p>
+                            <h5 class="fw-bold mb-3 text-center"><i class="fas fa-plane text-primary me-2"></i> Mes favoris</h5>
+                            <?php if ($nbrfav) {
+                            ?>
+                                <p class="fs-1 fw-semibold text-center"><span class="text-primary"><?= htmlspecialchars($nbrfav) ?></span></p>
+                            <?php }else {
+                            ?>
+                                <p class="text-muted mb-0">Ajoutez vos vols préférés pour les retrouver rapidement.</p>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="col-12">

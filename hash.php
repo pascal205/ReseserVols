@@ -1,5 +1,4 @@
 <?php
-$password = "beans20";
-
+$password = "azertyytreza";
 $hash = password_hash($password, PASSWORD_DEFAULT);
 echo $hash;

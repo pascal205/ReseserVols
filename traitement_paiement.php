@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $idvol        = (int)($_POST['id_vols'] ?? 0);
-$iduser        = (int)($_POST['id_user'] ?? 0);
+$iduser       = (int)($_POST['id_user'] ?? 0);
 $nbPersonnes  = max(1, min(5, (int)($_POST['nb_personnes'] ?? 1)));
 $montantTotal = (float)($_POST['montant_total'] ?? 0);
 

@@ -7,14 +7,10 @@ $pagestyle = false;
 $infolder = true;
 $activepage = ' ';
 
-$userId = isset($_GET['id']) ? (int)$_GET['id'] : null;
-
-if ($userId === null || $userId <= 0) {
-    $userId = $_SESSION['user_id'] ?? null;
-}
+$userId = $_SESSION['user_id'] ?? null;
 
 if (!$userId) {
-    header('Location:' . SITE_URL .'form/login.php');
+    redirect('form/login.php');
     exit;
 }
 
@@ -26,7 +22,12 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $nbreservstmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE id_user = :id");
 $nbreservstmt->execute([':id' => $userId]);
-$nbreserv = $nbreservstmt->fetchColumn();
+$nbreserv = $nbreservstmt->fetch(PDO::FETCH_COLUMN);
+
+$nbrfavstmt = $pdo->prepare("SELECT COUNT(*) FROM favoris WHERE id_user = :id");
+$nbrfavstmt->execute([':id' => $userId]);
+$nbrfav = $nbrfavstmt->fetch(PDO::FETCH_COLUMN);
+
 
 // $reservstmt = $pdo->prepare("SELECT id_reservation FROM reservations WHERE id_user = :id");
 // $reservstmt->execute([':id' => $userId]);
@@ -34,7 +35,7 @@ $nbreserv = $nbreservstmt->fetchColumn();
 
 
 if (!$user) {
-    header('Location:' . SITE_URL . 'form/login.php');
+    redirect('form/login.php');
     exit;
 }
 
