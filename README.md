@@ -1,4 +1,4 @@
-# ✈️ ReserVols
+# ✈️ ReserVols (Simulation)
 
 > **Application web de réservation et de gestion de vols**
 
